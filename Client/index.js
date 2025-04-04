@@ -1,0 +1,71 @@
+window.addEventListener("load", function () {
+    if (typeof MercadoPago !== "undefined") {
+        const mp = new MercadoPago('APP_USR-84817fc5-5c0c-4ecb-b68e-b9174b2aa96d', {
+            locale: 'es-AR'
+        });
+
+        document.getElementById("checkout-btn").addEventListener("click", function () {
+            const orderData = {
+                quantity: parseInt(document.getElementById("quantity").innerText),
+                description: document.getElementById("product-description").innerText,
+                price: parseFloat(document.getElementById("unit-price").innerText),
+            };
+
+            console.log("Datos enviados al servidor:", orderData); // Verifica los datos enviados
+
+            fetch("https://8cbd-2803-9800-b4c0-7d22-60d9-ae90-5e12-aa72.ngrok-free.app/create_preference", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(orderData),
+            })
+            .then(response => response.json())
+            .then(preference => {
+                console.log("Respuesta del servidor:", preference); // Verifica la respuesta del servidor
+                if (!preference.id) {
+                    console.error("El servidor no devolvió un id válido:", preference);
+                    alert("No se pudo generar la preferencia de pago.");
+                    return;
+                }
+                createCheckoutButton(preference.id);
+            })
+            .catch(error => {
+                console.error("Error en la solicitud:", error);
+                alert("Error al comunicarse con el servidor.");
+            });
+        });
+
+        function createCheckoutButton(preferenceId) {
+            const bricksBuilder = mp.bricks();
+
+            const renderComponent = async () => {
+                try {
+                    // Desmonta cualquier botón existente
+                    if (window.checkoutButton) {
+                        window.checkoutButton.unmount();
+                    }
+
+                    // Renderiza el botón de pago
+                    window.checkoutButton = await bricksBuilder.create("wallet", "button-checkout", {
+                        initialization: { preferenceId },
+                        callbacks: {
+                            onError: (error) => {
+                                console.error("Error en el pago:", error);
+                            },
+                            onReady: () => {
+                                console.log("El botón de pago está listo");
+                            },
+                        },
+                    });
+                } catch (error) {
+                    console.error("Error al renderizar el botón de pago:", error);
+                }
+            };
+
+            renderComponent();
+        }
+    } else {
+        console.error("MercadoPago SDK no cargado");
+    }
+});
