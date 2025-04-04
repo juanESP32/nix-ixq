@@ -5,22 +5,29 @@ import path from "path";
 import { MercadoPagoConfig, Preference } from "mercadopago";
 import dotenv from "dotenv";
 
+// Define __dirname manualmente
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Obtén la ruta absoluta del archivo .env
+const envPath = path.resolve(__dirname, "../.env");
+
 // Carga las variables de entorno desde el archivo .env
-dotenv.config();
+dotenv.config({ path: envPath });
+
+console.log("Ruta del archivo .env:", envPath);
+console.log("Access Token cargado desde .env:", process.env.ACCESS_TOKEN);
 
 const app = express();
 
 // Configura el cliente de MercadoPago
 const client = new MercadoPagoConfig({
-  accessToken: "APP_USR-4296293350131401-040121-37fa7c66fcf90871a2b3a779b19531ae-2364394386", // Reemplaza con tu Access Token
+  accessToken: process.env.ACCESS_TOKEN, // Reemplaza con tu Access Token
   options: { timeout: 5000 }, // Opcional: Configuración de tiempo de espera
 });
 
 // Inicializa la API de preferencias
 const preference = new Preference(client);
-
-// Obtén la ruta del directorio actual
-const __dirname = path.resolve(path.dirname(new URL(import.meta.url).pathname).replace(/^\/|\/$/g, ""));
 
 // Configura express
 app.use(express.urlencoded({ extended: false }));
