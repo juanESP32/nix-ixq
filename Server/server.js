@@ -4,6 +4,7 @@ import cors from "cors";
 import path from "path";
 import { MercadoPagoConfig, Preference } from "mercadopago";
 import dotenv from "dotenv";
+import { fileURLToPath } from "url";
 
 // Define __dirname manualmente
 const __filename = fileURLToPath(import.meta.url);
