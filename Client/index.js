@@ -13,7 +13,7 @@ window.addEventListener("load", function () {
 
             console.log("Datos enviados al servidor:", orderData); // Verifica los datos enviados
 
-            fetch("https://8cbd-2803-9800-b4c0-7d22-60d9-ae90-5e12-aa72.ngrok-free.app/create_preference", {
+            fetch("https://electronica2-maquina-expendedora.onrender.com/create_preference", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

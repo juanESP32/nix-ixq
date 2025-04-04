@@ -62,11 +62,11 @@ app.post("/create_preference", async (req, res) => {
         },
       ],
       back_urls: {
-        success: "https://8cbd-2803-9800-b4c0-7d22-60d9-ae90-5e12-aa72.ngrok-free.app",
-        failure: "https://8cbd-2803-9800-b4c0-7d22-60d9-ae90-5e12-aa72.ngrok-free.app",
-        pending: "https://8cbd-2803-9800-b4c0-7d22-60d9-ae90-5e12-aa72.ngrok-free.app",
+        success: "https://electronica2-maquina-expendedora.onrender.com",
+        failure: "https://electronica2-maquina-expendedora.onrender.com",
+        pending: "https://electronica2-maquina-expendedora.onrender.com",
       },
-      notification_url: "https://8cbd-2803-9800-b4c0-7d22-60d9-ae90-5e12-aa72.ngrok-free.app/update-payment", // Importante para notificaciones atravez de tune ngrok
+      notification_url: "https://electronica2-maquina-expendedora.onrender.com/update-payment", // Importante para notificaciones atravez de tune ngrok
       auto_return: "approved",
       external_reference: orderId || "ID_GENERICO",
     };
