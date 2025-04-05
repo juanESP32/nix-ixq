@@ -120,7 +120,6 @@ app.get("/payment-status", (req, res) => {
   });
 });
 
-// Inicia el servidor
 app.listen(8080, "0.0.0.0", () => {
   console.log("Servidor corriendo en http://0.0.0.0:8080");
 });
