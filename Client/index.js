@@ -5,6 +5,9 @@ window.addEventListener("load", function () {
         });
 
         document.getElementById("checkout-btn").addEventListener("click", function () {
+            const checkoutButton = document.getElementById("checkout-btn");
+            checkoutButton.disabled = true; // Deshabilita el botón para evitar múltiples clics
+
             const orderData = {
                 quantity: parseInt(document.getElementById("quantity").innerText),
                 description: document.getElementById("product-description").innerText,
@@ -26,6 +29,7 @@ window.addEventListener("load", function () {
                 if (!preference.id) {
                     console.error("El servidor no devolvió un id válido:", preference);
                     alert("No se pudo generar la preferencia de pago.");
+                    checkoutButton.disabled = false; // Habilita el botón si ocurre un error
                     return;
                 }
                 createCheckoutButton(preference.id);
@@ -33,6 +37,7 @@ window.addEventListener("load", function () {
             .catch(error => {
                 console.error("Error en la solicitud:", error);
                 alert("Error al comunicarse con el servidor.");
+                checkoutButton.disabled = false; // Habilita el botón si ocurre un error
             });
         });
 
@@ -53,6 +58,7 @@ window.addEventListener("load", function () {
                         callbacks: {
                             onError: (error) => {
                                 console.error("Error en el pago:", error);
+                                document.getElementById("checkout-btn").disabled = false; // Habilita el botón si ocurre un error
                             },
                             onReady: () => {
                                 console.log("El botón de pago está listo");
@@ -61,6 +67,7 @@ window.addEventListener("load", function () {
                     });
                 } catch (error) {
                     console.error("Error al renderizar el botón de pago:", error);
+                    document.getElementById("checkout-btn").disabled = false; // Habilita el botón si ocurre un error
                 }
             };
 
