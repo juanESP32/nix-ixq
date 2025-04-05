@@ -44,6 +44,7 @@ window.addEventListener("load", function () {
                     // Desmonta cualquier botón existente
                     if (window.checkoutButton) {
                         window.checkoutButton.unmount();
+                        window.checkoutButton = null; // Limpia la referencia
                     }
 
                     // Renderiza el botón de pago
