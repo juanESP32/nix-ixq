@@ -3,16 +3,212 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pago con MercadoPago</title>
+    <title>MAQUINA EXTENDEDORA VENTA DE GOLOSINAS</title>
+    <link rel="stylesheet" href="styles.css">
     <script src="https://sdk.mercadopago.com/js/v2"></script>
     <script src="index.js" defer></script>
 </head>
 <body>
-    <h1>Producto</h1>
-    <p id="product-description">Producto de prueba</p>
-    <p>Precio: $<span id="unit-price">20</span></p>
-    <p>Cantidad: <span id="quantity">1</span></p>
-    <button id="checkout-btn">Pagar</button>
-    <div id="button-checkout"></div>
+    <h1 class="main-title">BIENVENIDOS</h1>
+    <div class="product-grid">
+        <!-- Generamos 20 productos -->
+        <div class="product-card">
+            <p class="product-description">Mogul</p>
+            <img src="https://http2.mlstatic.com/D_NQ_NP_852559-MLA70079026773_062023-O.webp=" alt="Producto 16" class="product-image">
+            <div class="price-container">
+                <span>Precio:</span>
+                <span class="unit-price">$20</span>
+            </div>
+            <button class="checkout-btn">Pagar</button>
+        </div>
+        <div class="product-card">
+            <p class="product-description">Terrabusi</p>
+            <img src="https://http2.mlstatic.com/D_NQ_NP_842219-MLA43106295104_082020-O.webp=" alt="Producto 16" class="product-image">
+            <div class="price-container">
+                <span>Precio:</span>
+                <span class="unit-price">$25</span>
+            </div>
+            <button class="checkout-btn">Pagar</button>
+        </div>
+        <div class="product-card">
+            <p class="product-description">Clasicas </p>
+            <img src="https://arcordiezb2c.vteximg.com.br/arquivos/ids/178959/Papas-Fritas-Clasicas-Lays-85-Gr-1-16970.jpg?v=638270301776400000=" alt="Producto 16" class="product-image">
+            <div class="price-container">
+                <span>Precio:</span>
+                <span class="unit-price">$30</span>
+            </div>
+            <button class="checkout-btn">Pagar</button>
+        </div>
+        <!-- Repite este bloque hasta llegar a 20 productos -->
+        <!-- Ejemplo de más productos -->
+        <div class="product-card">
+            <p class="product-description">Oregano</p>
+            <img src="https://jumbocl.vtexassets.com/arquivos/ids/313684/Papas-Fritas-Lay-s-Mediterraneas-Oregano-180-g.jpg?v=638776400242330000=" alt="Producto 16" class="product-image">
+            <div class="price-container">
+                <span>Precio:</span>
+                <span class="unit-price">$35</span>
+            </div>
+            <button class="checkout-btn">Pagar</button>
+        </div>
+        <div class="product-card">
+            <p class="product-description">Producto 5</p>
+            <img src="https://http2.mlstatic.com/D_NQ_NP_852559-MLA70079026773_062023-O.webp=" alt="Producto 16" class="product-image">
+            <div class="price-container">
+                <span>Precio:</span>
+                <span class="unit-price">$40</span>
+            </div>
+            <button class="checkout-btn">Pagar</button>
+        </div>
+        <div class="product-card">
+            <p class="product-description">Producto 6</p>
+            <img src="https://http2.mlstatic.com/D_NQ_NP_852559-MLA70079026773_062023-O.webp=" alt="Producto 16" class="product-image">
+            <div class="price-container">
+                <span>Precio:</span>
+                <span class="unit-price">$45</span>
+            </div>
+            <button class="checkout-btn">Pagar</button>
+        </div>
+        <!-- Continúa hasta llegar a 20 productos -->
+            <!-- Ejemplo de más productos -->
+        <div class="product-card">
+            <p class="product-description">Producto 7</p>
+            <img src="https://http2.mlstatic.com/D_NQ_NP_852559-MLA70079026773_062023-O.webp=" alt="Producto 16" class="product-image">
+            <div class="price-container">
+                <span>Precio:</span>
+                <span class="unit-price">$35</span>
+            </div>
+            <button class="checkout-btn">Pagar</button>
+        </div>
+        <div class="product-card">
+            <p class="product-description">Producto 8</p>
+            <img src="https://http2.mlstatic.com/D_NQ_NP_852559-MLA70079026773_062023-O.webp=" alt="Producto 16" class="product-image">
+            <div class="price-container">
+                <span>Precio:</span>
+                <span class="unit-price">$40</span>
+            </div>
+            <button class="checkout-btn">Pagar</button>
+        </div>
+        <div class="product-card">
+            <p class="product-description">Producto 9</p>
+            <img src="https://http2.mlstatic.com/D_NQ_NP_852559-MLA70079026773_062023-O.webp=" alt="Producto 16" class="product-image">
+            <div class="price-container">
+                <span>Precio:</span>
+                <span class="unit-price">$45</span>
+            </div>
+            <button class="checkout-btn">Pagar</button>
+        </div>
+           <!-- Ejemplo de más productos -->
+           <div class="product-card">
+            <p class="product-description">Producto 10</p>
+            <img src="https://http2.mlstatic.com/D_NQ_NP_852559-MLA70079026773_062023-O.webp=" alt="Producto 16" class="product-image">
+            <div class="price-container">
+                <span>Precio:</span>
+                <span class="unit-price">$35</span>
+            </div>
+            <button class="checkout-btn">Pagar</button>
+        </div>
+        <div class="product-card">
+            <p class="product-description">Producto 11</p>
+            <img src="https://http2.mlstatic.com/D_NQ_NP_852559-MLA70079026773_062023-O.webp=" alt="Producto 16" class="product-image">
+            <div class="price-container">
+                <span>Precio:</span>
+                <span class="unit-price">$40</span>
+            </div>
+            <button class="checkout-btn">Pagar</button>
+        </div>
+        <div class="product-card">
+            <p class="product-description">Producto 12</p>
+            <img src="https://http2.mlstatic.com/D_NQ_NP_852559-MLA70079026773_062023-O.webp=" alt="Producto 16" class="product-image">
+            <div class="price-container">
+                <span>Precio:</span>
+                <span class="unit-price">$45</span>
+            </div>
+            <button class="checkout-btn">Pagar</button>
+        </div>
+           <!-- Ejemplo de más productos -->
+           <div class="product-card">
+            <p class="product-description">Producto 13</p>
+            <img src="https://http2.mlstatic.com/D_NQ_NP_852559-MLA70079026773_062023-O.webp=" alt="Producto 16" class="product-image">
+            <div class="price-container">
+                <span>Precio:</span>
+                <span class="unit-price">$35</span>
+            </div>
+            <button class="checkout-btn">Pagar</button>
+        </div>
+        <div class="product-card">
+            <p class="product-description">Producto 14</p>
+            <img src="https://http2.mlstatic.com/D_NQ_NP_852559-MLA70079026773_062023-O.webp=" alt="Producto 16" class="product-image">
+            <div class="price-container">
+                <span>Precio:</span>
+                <span class="unit-price">$40</span>
+            </div>
+            <button class="checkout-btn">Pagar</button>
+        </div>
+        <div class="product-card">
+            <p class="product-description">Producto 15</p>
+            <img src="https://http2.mlstatic.com/D_NQ_NP_852559-MLA70079026773_062023-O.webp=" alt="Producto 16" class="product-image">
+            <div class="price-container">
+                <span>Precio:</span>
+                <span class="unit-price">$45</span>
+            </div>
+            <button class="checkout-btn">Pagar</button>
+        </div>
+           <!-- Ejemplo de más productos -->
+           <div class="product-card">
+            <p class="product-description">Producto 16</p>
+            <img src="https://http2.mlstatic.com/D_NQ_NP_852559-MLA70079026773_062023-O.webp=" alt="Producto 16" class="product-image">
+            <div class="price-container">
+                <span>Precio:</span>
+                <span class="unit-price">$35</span>
+            </div>
+            <button class="checkout-btn">Pagar</button>
+        </div>
+        <div class="product-card">
+            <p class="product-description">Coca Cola</p>
+            <img src="https://media.istockphoto.com/id/458464735/es/foto/coca-cola.jpg?s=612x612&w=0&k=20&c=SnB7NqAiTxs3PQzWpSpwOiOncP1hbYHEP9zaDurvLwU=" alt="Producto 16" class="product-image">
+            <div class="price-container">
+                <span>Precio:</span>
+                <span class="unit-price">$40</span>
+            </div>
+            <button class="checkout-btn">Pagar</button>
+        </div>
+        <div class="product-card">
+            <p class="product-description">Producto 18</p>
+            <img src="https://http2.mlstatic.com/D_NQ_NP_852559-MLA70079026773_062023-O.webp=" alt="Producto 16" class="product-image">
+            <div class="price-container">
+                <span>Precio:</span>
+                <span class="unit-price">$45</span>
+            </div>
+            <button class="checkout-btn">Pagar</button>
+        </div>
+           <!-- Ejemplo de más productos -->
+           <div class="product-card">
+            <p class="product-description">Producto 19</p>
+            <img src="https://http2.mlstatic.com/D_NQ_NP_852559-MLA70079026773_062023-O.webp=" alt="Producto 16" class="product-image">
+            <div class="price-container">
+                <span>Precio:</span>
+                <span class="unit-price">$35</span>
+            </div>
+            <button class="checkout-btn">Pagar</button>
+        </div>
+        <div class="product-card">
+            <p class="product-description">Producto 20</p>
+            <img src="https://http2.mlstatic.com/D_NQ_NP_852559-MLA70079026773_062023-O.webp=" alt="Producto 16" class="product-image">
+            <div class="price-container">
+                <span>Precio:</span>
+                <span class="unit-price">$40</span>
+            </div>
+            <button class="checkout-btn">Pagar</button>
+        </div>
+        <div class="product-card">
+            <p class="product-description">Producto 21</p>
+            <img src="https://http2.mlstatic.com/D_NQ_NP_852559-MLA70079026773_062023-O.webp=" alt="Producto 16" class="product-image">
+            <div class="price-container">
+                <span>Precio:</span>
+                <span class="unit-price">$45</span>
+            </div>
+            <button class="checkout-btn">Pagar</button>
+        </div>
+    </div>
 </body>
 </html>

@@ -1,0 +1,134 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #fefefe; /* Fondo negro elegante */
+    color: #ffffff; /* Texto blanco para contraste */
+    margin: 0;
+    padding: 20px;
+}
+
+.main-title {
+    text-align: center;
+    color: #000000; /* Tono claro para el título */
+    margin-bottom: 40px;
+    font-size: 2.5rem;
+}
+
+.container {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 300px;
+}
+
+h1 {
+    text-align: center;
+    color: #0078d7;
+    margin-bottom: 20px;
+}
+
+p {
+    margin: 10px 0;
+}
+
+button {
+    background-color: #0078d7;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+button:hover {
+    background-color: #030300;
+}
+
+#button-checkout {
+    margin-top: 20px;
+}
+
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4 productos por fila */
+    gap: 50px 20px; /* 30px de espacio vertical, 20px de espacio horizontal */
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.product-card {
+    background: #1e1e1e; /* Fondo oscuro para las tarjetas */
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5); /* Sombra más pronunciada */
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between; /* Distribuye los elementos uniformemente */
+    height: 100%; /* Asegura que todas las tarjetas tengan la misma altura */
+}
+
+.product-card.selected {
+    border: 2px solid #28a745; /* Borde verde para productos seleccionados */
+    box-shadow: 0 4px 8px rgba(40, 167, 69, 0.4); /* Sombra verde */
+}
+
+.product-image {
+    width: 100%; /* La imagen ocupará todo el ancho del contenedor */
+    height: 150px; /* Altura fija para todas las imágenes */
+    border-radius: 10px;
+    margin-top: 0; /* Elimina cualquier espacio superior */
+    margin-bottom: 10px; /* Espacio mínimo entre la imagen y el precio */
+    object-fit: cover; /* Recorta la imagen para que se ajuste al contenedor */
+    display: block;
+}
+
+.product-description {
+    font-weight: bold;
+    color: #d4af37; /* Dorado elegante para el título del producto */
+    margin-bottom: 5px; /* Reduce el espacio debajo del título */
+    min-height: 10px; /* Asegura que todos los títulos ocupen el mismo espacio */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    white-space: nowrap; /* Evita que el texto se divida en varias líneas */
+    overflow: hidden; /* Oculta el texto que no cabe */
+    text-overflow: ellipsis; /* Agrega "..." si el texto es demasiado largo */
+}
+
+.unit-price {
+    font-size: 16px;
+    color: #d4af37; /* Dorado elegante para el precio */
+    margin: 0; /* Elimina márgenes adicionales */
+}
+
+.price-container {
+    display: flex; /* Activa flexbox */
+    align-items: center; /* Alinea verticalmente el texto y el monto */
+    justify-content: center; /* Centra horizontalmente si es necesario */
+    gap: 5px; /* Espacio entre "Precio:" y el monto */
+    margin-top: 0;
+    margin-bottom: 5px;
+}
+
+.checkout-btn {
+    background-color: #d4af37; /* Fondo dorado para el botón */
+    color: #121212; /* Texto negro para contraste */
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-top: 10px;
+    transition: background-color 0.3s ease;
+    width: 80%; /* Asegura que todos los botones tengan el mismo ancho */
+    text-align: center;
+}
+
+.checkout-btn:hover {
+    background-color: #b8860b; /* Dorado más oscuro al pasar el cursor */
+}

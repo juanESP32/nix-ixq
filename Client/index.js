@@ -77,3 +77,16 @@ window.addEventListener("load", function () {
         console.error("MercadoPago SDK no cargado");
     }
 });
+
+ocument.addEventListener("DOMContentLoaded", () => {
+    const productCards = document.querySelectorAll(".product-card");
+
+    productCards.forEach((card) => {
+        card.addEventListener("click", () => {
+            // Quitar la clase 'selected' de todos los productos
+            productCards.forEach((c) => c.classList.remove("selected"));
+            // Agregar la clase 'selected' al producto clicado
+            card.classList.add("selected");
+        });
+    });
+});
