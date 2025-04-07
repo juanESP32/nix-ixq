@@ -45,7 +45,7 @@ body {
 }
 
 .product-image {
-    width: 20%; /* Cambiado al 50% del ancho del contenedor */
+    width: 10%; /* Cambiado al 50% del ancho del contenedor */
     height: auto;
     border-radius: 10px;
     margin-bottom: 15px;
@@ -75,5 +75,7 @@ body {
 }
 
 .button-checkout-container {
-    margin-top: 15px;
+    margin-top: 40px;
+    margin-bottom: 40px; /* Agregado para más espacio debajo del botón */
+    text-align: center;
 }
