@@ -4,44 +4,56 @@ window.addEventListener("load", function () {
             locale: 'es-AR'
         });
 
-        document.getElementById("checkout-btn").addEventListener("click", function () {
-            const checkoutButton = document.getElementById("checkout-btn");
-            checkoutButton.disabled = true; // Deshabilita el botón para evitar múltiples clics
+        // Selecciona todos los botones con la clase "checkout-btn"
+        const checkoutButtons = document.querySelectorAll(".checkout-btn");
 
-            const orderData = {
-                quantity: parseInt(document.getElementById("quantity").innerText),
-                description: document.getElementById("product-description").innerText,
-                price: parseFloat(document.getElementById("unit-price").innerText),
-            };
+        // Agrega un evento "click" a cada botón
+        checkoutButtons.forEach((button) => {
+            button.addEventListener("click", function () {
+                // Deshabilita el botón para evitar múltiples clics
+                button.disabled = true;
 
-            console.log("Datos enviados al servidor:", orderData); // Verifica los datos enviados
+                // Obtén los datos del producto desde los atributos del botón
+                const description = button.getAttribute("data-description");
+                const price = parseFloat(button.getAttribute("data-price"));
+                const quantity = parseInt(button.getAttribute("data-quantity"));
 
-            fetch("https://electronica2-maquina-expendedora.onrender.com/create_preference", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(orderData),
-            })
-            .then(response => response.json())
-            .then(preference => {
-                console.log("Respuesta del servidor:", preference); // Verifica la respuesta del servidor
-                if (!preference.id) {
-                    console.error("El servidor no devolvió un id válido:", preference);
-                    alert("No se pudo generar la preferencia de pago.");
-                    checkoutButton.disabled = false; // Habilita el botón si ocurre un error
-                    return;
-                }
-                createCheckoutButton(preference.id);
-            })
-            .catch(error => {
-                console.error("Error en la solicitud:", error);
-                alert("Error al comunicarse con el servidor.");
-                checkoutButton.disabled = false; // Habilita el botón si ocurre un error
+                // Crea el objeto de datos del pedido
+                const orderData = {
+                    description,
+                    price,
+                    quantity,
+                };
+
+                console.log("Datos enviados al servidor:", orderData);
+
+                // Realiza la solicitud al servidor
+                fetch("https://electronica2-maquina-expendedora.onrender.com/create_preference", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(orderData),
+                })
+                .then((response) => response.json())
+                .then((preference) => {
+                    if (!preference.id) {
+                        console.error("El servidor no devolvió un id válido:", preference);
+                        alert("No se pudo generar la preferencia de pago.");
+                        button.disabled = false; // Habilita el botón si ocurre un error
+                        return;
+                    }
+                    createCheckoutButton(preference.id, button);
+                })
+                .catch((error) => {
+                    console.error("Error en la solicitud:", error);
+                    alert("Error al comunicarse con el servidor.");
+                    button.disabled = false; // Habilita el botón si ocurre un error
+                });
             });
         });
 
-        function createCheckoutButton(preferenceId) {
+        function createCheckoutButton(preferenceId, button) {
             const bricksBuilder = mp.bricks();
 
             const renderComponent = async () => {
@@ -58,7 +70,7 @@ window.addEventListener("load", function () {
                         callbacks: {
                             onError: (error) => {
                                 console.error("Error en el pago:", error);
-                                document.getElementById("checkout-btn").disabled = false; // Habilita el botón si ocurre un error
+                                button.disabled = false; // Habilita el botón si ocurre un error
                             },
                             onReady: () => {
                                 console.log("El botón de pago está listo");
@@ -67,7 +79,7 @@ window.addEventListener("load", function () {
                     });
                 } catch (error) {
                     console.error("Error al renderizar el botón de pago:", error);
-                    document.getElementById("checkout-btn").disabled = false; // Habilita el botón si ocurre un error
+                    button.disabled = false; // Habilita el botón si ocurre un error
                 }
             };
 
@@ -89,22 +101,5 @@ document.addEventListener("DOMContentLoaded", () => {
             card.classList.add("selected");
         });
     });
-
-    const checkoutButtons = document.querySelectorAll(".checkout-btn");
-    checkoutButtons.forEach((button) => {
-        button.addEventListener("click", function () {
-            // Lógica para manejar el clic en cada botón
-            console.log("Botón 'Pagar' clicado");
-        });
-    });
-
-    const checkoutButton = document.getElementById("checkout-btn");
-    if (checkoutButton) {
-        checkoutButton.addEventListener("click", function () {
-            // Tu lógica aquí
-        });
-    } else {
-        console.error("El botón con ID 'checkout-btn' no existe en el DOM.");
-    }
 });
 

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MAQUINA EXTENDEDORA VENTA DE GOLOSINAS</title>
+    <title>MAQUINA EXPENDEDORA VENTA DE GOLOSINAS</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://sdk.mercadopago.com/js/v2"></script>
     <script src="index.js" defer></script>
@@ -19,8 +19,7 @@
                 <span>Precio:</span>
                 <span class="unit-price">$20</span>
             </div>
-            <button class="checkout-btn">Pagar</button>
-            <div id="button-checkout"></div>
+            <button class="checkout-btn" data-description="Mogul" data-price="20" data-quantity="1">Pagar</button>
         </div>
         <div class="product-card">
             <p class="product-description">Terrabusi</p>
@@ -29,21 +28,18 @@
                 <span>Precio:</span>
                 <span class="unit-price">$25</span>
             </div>
-            <button class="checkout-btn">Pagar</button>
-            <div id="button-checkout"></div>
+            <button class="checkout-btn" data-description="Terrabusi" data-price="25" data-quantity="1">Pagar</button>
         </div>
         <div class="product-card">
-            <p class="product-description">Clasicas </p>
+            <p class="product-description">Clasicas</p>
             <img src="https://arcordiezb2c.vteximg.com.br/arquivos/ids/178959/Papas-Fritas-Clasicas-Lays-85-Gr-1-16970.jpg?v=638270301776400000=" alt="Producto 16" class="product-image">
             <div class="price-container">
                 <span>Precio:</span>
                 <span class="unit-price">$30</span>
             </div>
-            <button class="checkout-btn">Pagar</button>
-            <div id="button-checkout"></div>
+            <button class="checkout-btn" data-description="Clasicas" data-price="30" data-quantity="1">Pagar</button>
         </div>
         <!-- Repite este bloque hasta llegar a 20 productos -->
-        <!-- Ejemplo de más productos -->
         <div class="product-card">
             <p class="product-description">Oregano</p>
             <img src="https://jumbocl.vtexassets.com/arquivos/ids/313684/Papas-Fritas-Lay-s-Mediterraneas-Oregano-180-g.jpg?v=638776400242330000=" alt="Producto 16" class="product-image">
@@ -51,8 +47,7 @@
                 <span>Precio:</span>
                 <span class="unit-price">$35</span>
             </div>
-            <button class="checkout-btn">Pagar</button>
-            <div id="button-checkout"></div>
+            <button class="checkout-btn" data-description="Oregano" data-price="35" data-quantity="1">Pagar</button>
         </div>
         <div class="product-card">
             <p class="product-description">Producto 5</p>
@@ -61,8 +56,7 @@
                 <span>Precio:</span>
                 <span class="unit-price">$40</span>
             </div>
-            <button class="checkout-btn">Pagar</button>
-            <div id="button-checkout"></div>
+            <button class="checkout-btn" data-description="Producto 5" data-price="40" data-quantity="1">Pagar</button>
         </div>
         <div class="product-card">
             <p class="product-description">Producto 6</p>
@@ -71,11 +65,9 @@
                 <span>Precio:</span>
                 <span class="unit-price">$45</span>
             </div>
-            <button class="checkout-btn">Pagar</button>
-            <div id="button-checkout"></div>
+            <button class="checkout-btn" data-description="Producto 6" data-price="45" data-quantity="1">Pagar</button>
         </div>
         <!-- Continúa hasta llegar a 20 productos -->
-        <!-- Ejemplo de más productos -->
         <div class="product-card">
             <p class="product-description">Producto 7</p>
             <img src="https://http2.mlstatic.com/D_NQ_NP_852559-MLA70079026773_062023-O.webp" alt="Producto 16" class="product-image">
@@ -83,8 +75,7 @@
                 <span>Precio:</span>
                 <span class="unit-price">$35</span>
             </div>
-            <button class="checkout-btn">Pagar</button>
-            <div id="button-checkout"></div>
+            <button class="checkout-btn" data-description="Producto 7" data-price="35" data-quantity="1">Pagar</button>
         </div>
         <div class="product-card">
             <p class="product-description">Producto 8</p>
@@ -93,8 +84,7 @@
                 <span>Precio:</span>
                 <span class="unit-price">$40</span>
             </div>
-            <button class="checkout-btn">Pagar</button>
-            <div id="button-checkout"></div>
+            <button class="checkout-btn" data-description="Producto 8" data-price="40" data-quantity="1">Pagar</button>
         </div>
         <div class="product-card">
             <p class="product-description">Producto 9</p>
@@ -103,8 +93,7 @@
                 <span>Precio:</span>
                 <span class="unit-price">$45</span>
             </div>
-            <button class="checkout-btn">Pagar</button>
-            <div id="button-checkout"></div>
+            <button class="checkout-btn" data-description="Producto 9" data-price="45" data-quantity="1">Pagar</button>
         </div>
         <!-- Continúa con el mismo patrón para los demás productos -->
     </div>
