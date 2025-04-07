@@ -58,19 +58,27 @@ window.addEventListener("load", function () {
 
             const renderComponent = async () => {
                 try {
-                    // Desmonta cualquier botón existente
-                    if (window.checkoutButton) {
-                        window.checkoutButton.unmount();
-                        window.checkoutButton = null; // Limpia la referencia
+                    // Encuentra el contenedor donde se montará el botón
+                    const container = button.nextElementSibling; // Asume que el contenedor está justo después del botón
+                    if (!container || !container.classList.contains("button-checkout-container")) {
+                        console.error("No se encontró el contenedor para montar el botón de pago.");
+                        button.disabled = false;
+                        return;
+                    }
+
+                    // Desmonta cualquier botón existente en el contenedor
+                    if (container.checkoutButton) {
+                        container.checkoutButton.unmount();
+                        container.checkoutButton = null;
                     }
 
                     // Renderiza el botón de pago
-                    window.checkoutButton = await bricksBuilder.create("wallet", "button-checkout", {
+                    container.checkoutButton = await bricksBuilder.create("wallet", container, {
                         initialization: { preferenceId },
                         callbacks: {
                             onError: (error) => {
                                 console.error("Error en el pago:", error);
-                                button.disabled = false; // Habilita el botón si ocurre un error
+                                button.disabled = false;
                             },
                             onReady: () => {
                                 console.log("El botón de pago está listo");
@@ -79,7 +87,7 @@ window.addEventListener("load", function () {
                     });
                 } catch (error) {
                     console.error("Error al renderizar el botón de pago:", error);
-                    button.disabled = false; // Habilita el botón si ocurre un error
+                    button.disabled = false;
                 }
             };
 
