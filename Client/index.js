@@ -41,28 +41,38 @@ window.addEventListener("load", function () {
         });
 
         function createCheckoutButton(preferenceId, button) {
-            const container = button.nextElementSibling;
-
-            if (!container || !container.classList.contains("button-checkout-container")) {
-                console.error("No se encontró el contenedor para el botón de pago.");
-                button.disabled = false;
-                return;
-            }
-
             const bricksBuilder = mp.bricks();
 
-            bricksBuilder.create("wallet", container, {
-                initialization: { preferenceId },
-                callbacks: {
-                    onError: (error) => {
-                        console.error("Error en el pago:", error);
+            const renderComponent = async () => {
+                try {
+                    // Encuentra el contenedor donde se montará el botón
+                    const container = button.nextElementSibling; // Asume que el contenedor está justo después del botón
+                    if (!container || !container.classList.contains("button-checkout-container")) {
+                        console.error("No se encontró el contenedor para montar el botón de pago.");
                         button.disabled = false;
-                    },
-                    onReady: () => {
-                        console.log("El botón de pago está listo");
-                    },
-                },
-            });
+                        return;
+                    }
+
+                    // Renderiza el botón de pago
+                    await bricksBuilder.create("wallet", container, {
+                        initialization: { preferenceId },
+                        callbacks: {
+                            onError: (error) => {
+                                console.error("Error en el pago:", error);
+                                button.disabled = false;
+                            },
+                            onReady: () => {
+                                console.log("El botón de pago está listo");
+                            },
+                        },
+                    });
+                } catch (error) {
+                    console.error("Error al renderizar el botón de pago:", error);
+                    button.disabled = false;
+                }
+            };
+
+            renderComponent();
         }
     } else {
         console.error("MercadoPago SDK no cargado");

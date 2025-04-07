@@ -45,10 +45,11 @@ body {
 }
 
 .product-image {
-    width: 100%;
+    width: 20%; /* Cambiado al 50% del ancho del contenedor */
     height: auto;
     border-radius: 10px;
     margin-bottom: 15px;
+    object-fit: contain; /* Asegura que la imagen mantenga sus proporciones */
 }
 
 .product-price {
