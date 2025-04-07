@@ -89,4 +89,22 @@ document.addEventListener("DOMContentLoaded", () => {
             card.classList.add("selected");
         });
     });
+
+    const checkoutButtons = document.querySelectorAll(".checkout-btn");
+    checkoutButtons.forEach((button) => {
+        button.addEventListener("click", function () {
+            // Lógica para manejar el clic en cada botón
+            console.log("Botón 'Pagar' clicado");
+        });
+    });
+
+    const checkoutButton = document.getElementById("checkout-btn");
+    if (checkoutButton) {
+        checkoutButton.addEventListener("click", function () {
+            // Tu lógica aquí
+        });
+    } else {
+        console.error("El botón con ID 'checkout-btn' no existe en el DOM.");
+    }
 });
+
