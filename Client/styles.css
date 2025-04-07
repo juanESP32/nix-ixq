@@ -75,7 +75,13 @@ body {
 }
 
 .button-checkout-container {
-    margin-top: 40px;
-    margin-bottom: 40px; /* Agregado para más espacio debajo del botón */
+    margin-top: 15px;
+    margin-bottom: 25px; /* Agregado para más espacio debajo del botón */
+    text-align: center;
+}
+
+/* Contenedor del botón de MercadoPago */
+.mercado-pago-container {
+    margin-top: 20px;
     text-align: center;
 }

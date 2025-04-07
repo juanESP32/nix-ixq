@@ -45,16 +45,24 @@ window.addEventListener("load", function () {
 
             const renderComponent = async () => {
                 try {
-                    // Encuentra el contenedor donde se montará el botón
-                    const container = button.nextElementSibling; // Asume que el contenedor está justo después del botón
-                    if (!container || !container.classList.contains("button-checkout-container")) {
-                        console.error("No se encontró el contenedor para montar el botón de pago.");
+                    // Encuentra el contenedor principal de la tarjeta
+                    const productCard = button.closest(".product-card");
+                    if (!productCard) {
+                        console.error("No se encontró la tarjeta del producto.");
                         button.disabled = false;
                         return;
                     }
 
+                    // Crea o selecciona el contenedor para el botón de MercadoPago
+                    let mercadoPagoContainer = productCard.nextElementSibling;
+                    if (!mercadoPagoContainer || !mercadoPagoContainer.classList.contains("mercado-pago-container")) {
+                        mercadoPagoContainer = document.createElement("div");
+                        mercadoPagoContainer.classList.add("mercado-pago-container");
+                        productCard.parentNode.insertBefore(mercadoPagoContainer, productCard.nextSibling);
+                    }
+
                     // Renderiza el botón de pago
-                    await bricksBuilder.create("wallet", container, {
+                    await bricksBuilder.create("wallet", mercadoPagoContainer, {
                         initialization: { preferenceId },
                         callbacks: {
                             onError: (error) => {
