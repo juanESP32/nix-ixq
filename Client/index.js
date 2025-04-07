@@ -78,7 +78,7 @@ window.addEventListener("load", function () {
     }
 });
 
-ocument.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", () => {
     const productCards = document.querySelectorAll(".product-card");
 
     productCards.forEach((card) => {
