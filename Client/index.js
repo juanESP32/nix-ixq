@@ -4,74 +4,65 @@ window.addEventListener("load", function () {
             locale: 'es-AR'
         });
 
-        document.getElementById("checkout-btn").addEventListener("click", function () {
-            const checkoutButton = document.getElementById("checkout-btn");
-            checkoutButton.disabled = true; // Deshabilita el botón para evitar múltiples clics
+        const checkoutButtons = document.querySelectorAll(".checkout-btn");
 
-            const orderData = {
-                quantity: parseInt(document.getElementById("quantity").innerText),
-                description: document.getElementById("product-description").innerText,
-                price: parseFloat(document.getElementById("unit-price").innerText),
-            };
+        checkoutButtons.forEach((button) => {
+            button.addEventListener("click", function () {
+                button.disabled = true;
 
-            console.log("Datos enviados al servidor:", orderData); // Verifica los datos enviados
+                const description = button.getAttribute("data-description");
+                const price = parseFloat(button.getAttribute("data-price"));
+                const quantity = parseInt(button.getAttribute("data-quantity"));
 
-            fetch("https://electronica2-maquina-expendedora.onrender.com/create_preference", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(orderData),
-            })
-            .then(response => response.json())
-            .then(preference => {
-                console.log("Respuesta del servidor:", preference); // Verifica la respuesta del servidor
-                if (!preference.id) {
-                    console.error("El servidor no devolvió un id válido:", preference);
-                    alert("No se pudo generar la preferencia de pago.");
-                    checkoutButton.disabled = false; // Habilita el botón si ocurre un error
-                    return;
-                }
-                createCheckoutButton(preference.id);
-            })
-            .catch(error => {
-                console.error("Error en la solicitud:", error);
-                alert("Error al comunicarse con el servidor.");
-                checkoutButton.disabled = false; // Habilita el botón si ocurre un error
+                const orderData = { description, price, quantity };
+
+                fetch("https://electronica2-maquina-expendedora.onrender.com/create_preference", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(orderData),
+                })
+                .then((response) => response.json())
+                .then((preference) => {
+                    if (!preference.id) {
+                        alert("No se pudo generar la preferencia de pago.");
+                        button.disabled = false;
+                        return;
+                    }
+                    createCheckoutButton(preference.id, button);
+                })
+                .catch((error) => {
+                    console.error("Error:", error);
+                    alert("Error al comunicarse con el servidor.");
+                    button.disabled = false;
+                });
             });
         });
 
-        function createCheckoutButton(preferenceId) {
+        function createCheckoutButton(preferenceId, button) {
+            const container = button.nextElementSibling;
+
+            if (!container || !container.classList.contains("button-checkout-container")) {
+                console.error("No se encontró el contenedor para el botón de pago.");
+                button.disabled = false;
+                return;
+            }
+
             const bricksBuilder = mp.bricks();
 
-            const renderComponent = async () => {
-                try {
-                    // Desmonta cualquier botón existente
-                    if (window.checkoutButton) {
-                        window.checkoutButton.unmount();
-                        window.checkoutButton = null; // Limpia la referencia
-                    }
-
-                    // Renderiza el botón de pago
-                    window.checkoutButton = await bricksBuilder.create("wallet", "button-checkout", {
-                        initialization: { preferenceId },
-                        callbacks: {
-                            onError: (error) => {
-                                console.error("Error en el pago:", error);
-                                document.getElementById("checkout-btn").disabled = false; // Habilita el botón si ocurre un error
-                            },
-                            onReady: () => {
-                                console.log("El botón de pago está listo");
-                            },
-                        },
-                    });
-                } catch (error) {
-                    console.error("Error al renderizar el botón de pago:", error);
-                    document.getElementById("checkout-btn").disabled = false; // Habilita el botón si ocurre un error
-                }
-            };
-
-            renderComponent();
+            bricksBuilder.create("wallet", container, {
+                initialization: { preferenceId },
+                callbacks: {
+                    onError: (error) => {
+                        console.error("Error en el pago:", error);
+                        button.disabled = false;
+                    },
+                    onReady: () => {
+                        console.log("El botón de pago está listo");
+                    },
+                },
+            });
         }
     } else {
         console.error("MercadoPago SDK no cargado");
