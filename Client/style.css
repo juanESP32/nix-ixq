@@ -7,27 +7,38 @@ body {
 }
 
 .product-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 20px;
+    display: flex; /* Activa Flexbox */
+    flex-wrap: nowrap; /* Evita que los productos se envuelvan en otra fila */
+    justify-content: center; /* Centra los productos horizontalmente */
+    gap: 20px; /* Espacio entre los productos */
     padding: 20px;
+    overflow-x: auto; /* Permite desplazamiento horizontal si no caben */
 }
 
 .product-card {
     background-color: #1e1e1e;
     color: #f1c40f;
     width: 250px;
+    height: 400px; /* Altura fija para todas las tarjetas */
     border-radius: 12px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
     padding: 15px;
     text-align: center;
     position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Distribuye los elementos uniformemente */
+    align-items: center; /* Centra los elementos horizontalmente */
 }
 
 .product-card h2 {
     font-size: 1.2rem;
     margin-bottom: 10px;
+    min-height: 40px; /* Asegura que los títulos ocupen el mismo espacio */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
 }
 
 .product-card img {
@@ -53,7 +64,8 @@ body {
     color: #1e1e1e;
     cursor: pointer;
     margin-top: 10px;
-    width: auto;
+    width: 80%; /* Asegura que todos los botones tengan el mismo ancho */
+    text-align: center;
 }
 
 .checkout-btn:hover {
@@ -69,6 +81,8 @@ body {
         flex-direction: column;
         align-items: center;
         padding: 10px;
+        flex-wrap: wrap; /* Permite que los productos se envuelvan en filas */
+        justify-content: center; /* Centra los productos en filas */
     }
 
     .product-card {
