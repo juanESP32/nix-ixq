@@ -6,6 +6,9 @@ window.addEventListener("load", function () {
 
         document.querySelectorAll(".checkout-btn").forEach(button => {
             button.addEventListener("click", function () {
+                // Deshabilita el botón para evitar múltiples clics
+                button.disabled = true;
+
                 const suffix = button.dataset.product;
 
                 const description = document.getElementById(`product-description-${suffix}`).textContent;
@@ -31,6 +34,7 @@ window.addEventListener("load", function () {
                 .then(preference => {
                     if (!preference.id) {
                         alert("No se pudo generar la preferencia de pago.");
+                        button.disabled = false; // Habilita el botón si ocurre un error
                         return;
                     }
                     const targetId = `button-checkout-${suffix}`;
@@ -39,6 +43,7 @@ window.addEventListener("load", function () {
                 .catch(error => {
                     console.error("Error al comunicarse con el servidor:", error);
                     alert("Error al generar el pago.");
+                    button.disabled = false; // Habilita el botón si ocurre un error
                 });
             });
         });
