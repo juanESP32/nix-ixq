@@ -33,7 +33,8 @@ window.addEventListener("load", function () {
                         alert("No se pudo generar la preferencia de pago.");
                         return;
                     }
-                    createCheckoutButton(preference.id);
+                    const targetId = `button-checkout-${suffix}`;
+                    createCheckoutButton(preference.id, targetId);
                 })
                 .catch(error => {
                     console.error("Error al comunicarse con el servidor:", error);
@@ -42,7 +43,7 @@ window.addEventListener("load", function () {
             });
         });
 
-        function createCheckoutButton(preferenceId) {
+        function createCheckoutButton(preferenceId, elementId) {
             const bricksBuilder = mp.bricks();
 
             const renderComponent = async () => {
@@ -52,7 +53,7 @@ window.addEventListener("load", function () {
                         window.checkoutButton = null;
                     }
 
-                    window.checkoutButton = await bricksBuilder.create("wallet", "button-checkout", {
+                    window.checkoutButton = await bricksBuilder.create("wallet", elementId, {
                         initialization: { preferenceId },
                         callbacks: {
                             onError: (error) => console.error("Error en el pago:", error),
