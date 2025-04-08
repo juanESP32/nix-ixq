@@ -78,16 +78,18 @@ body {
 
 @media (max-width: 768px) {
     .product-container {
-        flex-direction: column;
+        flex-direction: column; /* Asegura que las tarjetas estén en una columna */
         align-items: center;
         padding: 10px;
         flex-wrap: wrap; /* Permite que los productos se envuelvan en filas */
         justify-content: center; /* Centra los productos en filas */
+        gap: 30px; /* Aumenta el espacio entre las tarjetas */
     }
 
     .product-card {
         width: 90%;
         max-width: 350px;
+        margin-bottom: 20px; /* Aumenta el espacio entre las tarjetas */
     }
 
     .checkout-btn {
