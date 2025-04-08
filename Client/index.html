@@ -8,11 +8,29 @@
     <script src="index.js" defer></script>
 </head>
 <body>
-    <h1>Producto</h1>
-    <p id="product-description">Producto de prueba</p>
-    <p>Precio: $<span id="unit-price">20</span></p>
-    <p>Cantidad: <span id="quantity">1</span></p>
-    <button id="checkout-btn">Pagar</button>
+    <h1>Productos</h1>
+
+    <div class="product">
+        <p id="product-description-a">Producto A</p>
+        <p>Precio: $<span id="unit-price-a">20</span></p>
+        <p>Cantidad: <span id="quantity-a">1</span></p>
+        <button class="checkout-btn" data-product="a">Comprar</button>
+    </div>
+
+    <div class="product">
+        <p id="product-description-b">Producto B</p>
+        <p>Precio: $<span id="unit-price-b">35</span></p>
+        <p>Cantidad: <span id="quantity-b">1</span></p>
+        <button class="checkout-btn" data-product="b">Comprar</button>
+    </div>
+
+    <div class="product">
+        <p id="product-description-c">Producto C</p>
+        <p>Precio: $<span id="unit-price-c">50</span></p>
+        <p>Cantidad: <span id="quantity-c">1</span></p>
+        <button class="checkout-btn" data-product="c">Comprar</button>
+    </div>
+
     <div id="button-checkout"></div>
 </body>
 </html>
