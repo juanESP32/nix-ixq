@@ -6,8 +6,15 @@ window.addEventListener("load", function () {
 
         document.querySelectorAll(".checkout-btn").forEach(button => {
             button.addEventListener("click", function () {
-                // Deshabilita el botón para evitar múltiples clics
+                // Deshabilita el botón actual
                 button.disabled = true;
+
+                // Habilita todos los demás botones
+                document.querySelectorAll(".checkout-btn").forEach(otherButton => {
+                    if (otherButton !== button) {
+                        otherButton.disabled = false;
+                    }
+                });
 
                 const suffix = button.dataset.product;
 
