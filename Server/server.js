@@ -1,10 +1,10 @@
-
 import express from "express";
 import cors from "cors";
 import path from "path";
 import { MercadoPagoConfig, Preference } from "mercadopago";
 import dotenv from "dotenv";
 import { fileURLToPath } from "url";
+import mqtt from "mqtt"; // ✅ Importamos el cliente MQTT
 
 // Define __dirname manualmente
 const __filename = fileURLToPath(import.meta.url);
@@ -102,10 +102,24 @@ let lastPaymentId = "";
 
 // Endpoint para recibir datos de MercadoPago y actualizar el ID
 app.post("/update-payment", (req, res) => {
-  const newPaymentId = req.body.id; // El ID enviado por MercadoPago
+  const newPaymentId = req.body.id;
+
   if (newPaymentId && newPaymentId !== lastPaymentId) {
-    lastPaymentId = newPaymentId; // Actualiza el último ID
+    lastPaymentId = newPaymentId;
+    console.log("✅ Nuevo ID de pago recibido:", lastPaymentId);
     console.log("Nuevo ID de pago recibido:", lastPaymentId);
+
+    // 🛰️ Publicamos el evento de venta por MQTT
+    const payload = {
+      producto: "A", // 🔁 Deberías hacerlo dinámico si podés
+      precio: 1500,   // 🔁 También debería venir del pedido real
+      paymentId: newPaymentId
+    };
+
+    mqttClient.publish("expendedora/snacko/venta", JSON.stringify(payload));
+    console.log("📤 Mensaje MQTT publicado:", payload);
+    console.log("📤 Mensaje MQTT publicado:", payload);
+
     res.status(200).json({ message: "ID de pago actualizado exitosamente" });
   } else {
     res.status(400).json({ message: "No se proporcionó un ID válido o ya es el mismo" });
@@ -118,6 +132,16 @@ app.get("/payment-status", (req, res) => {
     id: lastPaymentId,
     paymentConfirmed: !!lastPaymentId,
   });
+});
+
+const mqttClient = mqtt.connect("mqtt://broker.hivemq.com");
+
+mqttClient.on("connect", () => {
+  console.log("✅ Conectado al broker MQTT");
+});
+
+mqttClient.on("error", (err) => {
+  console.error("❌ Error en la conexión MQTT:", err);
 });
 
 app.listen(8080, "0.0.0.0", () => {
