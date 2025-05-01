@@ -134,7 +134,7 @@ app.get("/payment-status", (req, res) => {
   });
 });
 
-const mqttClient = mqtt.connect("mqtt://broker.hivemq.com");
+const mqttClient = mqtt.connect("mqtt://ywgyypbjb:ufHgLJsG1SaxB2ccHd7H2g1e0jg1cDos@jaragua.lmq.cloudamqp.com:1883");
 
 mqttClient.on("connect", () => {
   console.log("✅ Conectado al broker MQTT");
