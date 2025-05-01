@@ -134,7 +134,13 @@ app.get("/payment-status", (req, res) => {
   });
 });
 
-const mqttClient = mqtt.connect("mqtt://ywgyypbjb:ufHgLJsG1SaxB2ccHd7H2g1e0jg1cDos@jaragua.lmq.cloudamqp.com:1883");
+//datos para ingresar al broker mqtt
+const mqttClient = mqtt.connect("mqtt://jaragua.lmq.cloudamqp.com", {
+  port: 1883,
+  username: "ywgyypbjb",
+  password: "ufHgLJsG1SaxB2ccHd7H2g1e0jg1cDos"
+});
+
 
 mqttClient.on("connect", () => {
   console.log("✅ Conectado al broker MQTT");
