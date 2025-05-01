@@ -136,7 +136,7 @@ app.get("/payment-status", (req, res) => {
 
 //datos para ingresar al broker mqtt
 const mqttClient = mqtt.connect("mqtt://jaragua.lmq.cloudamqp.com", {
-  port: 1883,
+  port: 8883,
   username: "ywgyypbjb",
   password: "ufHgLJsG1SaxB2ccHd7H2g1e0jg1cDos"
 });
