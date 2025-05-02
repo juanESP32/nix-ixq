@@ -109,8 +109,9 @@ app.post("/update-payment", async (req, res) => {
     const paymentData = await mpResponse.json();
 
     const externalRef = paymentData.external_reference;
-    const producto = paymentData.additional_info?.items?.[0]?.title || "desconocido";
-    const precio = paymentData.transaction_amount || 0;
+    const producto = paymentData.description || paymentData.external_reference || "desconocido";
+    const precio = paymentData.transaction_details?.total_paid_amount || paymentData.transaction_amount || 0;
+
 
     const payload = {
       producto,
