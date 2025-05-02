@@ -116,9 +116,13 @@ app.post("/update-payment", (req, res) => {
       paymentId: newPaymentId
     };
 
-    mqttClient.publish("expendedora/snacko/venta", JSON.stringify(payload));
-    console.log("📤 Mensaje MQTT publicado:", payload);
-    console.log("📤 Mensaje MQTT publicado:", payload);
+    mqttClient.publish("expendedora/snacko/venta", JSON.stringify(payload), { qos: 1 }, err => {
+      if (err) {
+        console.error("❌ Error al publicar en MQTT:", err);
+      } else {
+        console.log("📤 Mensaje MQTT publicado:", payload);
+      }
+    });
 
     res.status(200).json({ message: "ID de pago actualizado exitosamente" });
   } else {
@@ -135,16 +139,16 @@ app.get("/payment-status", (req, res) => {
 });
 
 //datos para ingresar al broker mqtt
-const mqttClient = mqtt.connect("mqtt://jaragua.lmq.cloudamqp.com", {
-  port: 8883,
-  username: "ywgyypbjb",
-  password: "ufHgLJsG1SaxB2ccHd7H2g1e0jg1cDos"
+const mqttClient = mqtt.connect("mqtts://736ca49d528b4c41bfd924bc491b6878.s1.eu.hivemq.cloud:8883", {
+  username: "snacko",
+  password: "Qwertyuiop1",
 });
-
 
 mqttClient.on("connect", () => {
   console.log("✅ Conectado al broker MQTT");
 });
+
+mqttClient.on("error", err => console.error("❌ Error MQTT:", err));
 
 mqttClient.on("error", (err) => {
   console.error("❌ Error en la conexión MQTT:", err);
