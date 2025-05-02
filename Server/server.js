@@ -107,11 +107,11 @@ app.post("/update-payment", async (req, res) => {
     });
 
     const paymentData = await mpResponse.json();
+    console.log("Respuesta de MercadoPago:", paymentData);
 
     const externalRef = paymentData.external_reference;
-    const producto = paymentData.description || paymentData.external_reference || "desconocido";
+    const producto = paymentData.description || externalRef || "desconocido";
     const precio = paymentData.transaction_details?.total_paid_amount || paymentData.transaction_amount || 0;
-
 
     const payload = {
       producto,
