@@ -5,7 +5,6 @@ import { MercadoPagoConfig, Preference } from "mercadopago";
 import dotenv from "dotenv";
 import { fileURLToPath } from "url";
 import mqtt from "mqtt";
-import fetch from "node-fetch"; // 👈 Requiere instalar: npm install node-fetch
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -47,6 +46,9 @@ app.post("/create_preference", async (req, res) => {
       return res.status(400).json({ error: "Faltan datos requeridos" });
     }
 
+    // Codificar la información completa del producto en external_reference
+    const external_reference = `${orderId}|${description}|${price}`;
+
     const preferenceData = {
       items: [
         {
@@ -62,7 +64,7 @@ app.post("/create_preference", async (req, res) => {
       },
       notification_url: "https://electronica2-maquina-expendedora.onrender.com/update-payment",
       auto_return: "approved",
-      external_reference: orderId,
+      external_reference, // ejemplo: "A|Producto A|20"
     };
 
     const response = await preference.create({ body: preferenceData });
@@ -77,63 +79,37 @@ app.post("/create_preference", async (req, res) => {
   }
 });
 
-app.get("/feedback", (req, res) => {
-  res.json({
-    Payment: req.query.payment_id,
-    Status: req.query.status,
-    MerchantOrder: req.query.merchant_order_id,
-  });
-});
-
 let lastPaymentId = "";
 
-app.post("/update-payment", async (req, res) => {
+app.post("/update-payment", (req, res) => {
   const newPaymentId = req.body.id;
+  const externalRef = req.body.external_reference;
 
-  if (!newPaymentId || newPaymentId === lastPaymentId) {
-    return res.status(400).json({ message: "ID inválido o repetido" });
+  if (!newPaymentId || !externalRef || newPaymentId === lastPaymentId) {
+    return res.status(400).json({ message: "ID inválido o faltan datos" });
   }
 
   lastPaymentId = newPaymentId;
-  console.log("✅ Nuevo ID de pago recibido:", newPaymentId);
 
-  try {
-    const mpResponse = await fetch(`https://api.mercadopago.com/v1/payments/${newPaymentId}`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${process.env.ACCESS_TOKEN}`,
-        "Content-Type": "application/json",
-      },
-    });
+  // Decodificar los datos del producto
+  const [codigo, producto, precioStr] = externalRef.split("|");
+  const precio = parseFloat(precioStr) || 0;
 
-    const paymentData = await mpResponse.json();
+  const payload = {
+    producto,
+    precio,
+    paymentId: newPaymentId,
+  };
 
-    const externalRef = paymentData.external_reference;
-    const producto = paymentData.description || paymentData.external_reference || "desconocido";
-    const precio = paymentData.transaction_details?.total_paid_amount || paymentData.transaction_amount || 0;
+  mqttClient.publish("expendedora/snacko/venta", JSON.stringify(payload), { qos: 1 }, err => {
+    if (err) {
+      console.error("❌ Error al publicar en MQTT:", err);
+    } else {
+      console.log("📤 Mensaje MQTT publicado:", payload);
+    }
+  });
 
-
-    const payload = {
-      producto,
-      precio,
-      paymentId: newPaymentId,
-      referencia: externalRef,
-    };
-
-    mqttClient.publish("expendedora/snacko/venta", JSON.stringify(payload), { qos: 1 }, err => {
-      if (err) {
-        console.error("❌ Error al publicar en MQTT:", err);
-      } else {
-        console.log("📤 Mensaje MQTT publicado:", payload);
-      }
-    });
-
-    res.status(200).json({ message: "Mensaje MQTT enviado correctamente" });
-
-  } catch (err) {
-    console.error("❌ Error al consultar la API de MercadoPago:", err);
-    res.status(500).json({ error: "Fallo al consultar datos del pago" });
-  }
+  res.status(200).json({ message: "Mensaje MQTT enviado correctamente" });
 });
 
 app.get("/payment-status", (req, res) => {
