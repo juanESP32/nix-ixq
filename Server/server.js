@@ -96,6 +96,7 @@ app.post("/update-payment", async (req, res) => {
 
   lastPaymentId = newPaymentId;
   console.log("✅ Nuevo ID de pago recibido:", newPaymentId);
+  console.log("Contenido de req.body recibido en /update-payment:", req.body);
 
   try {
     const mpResponse = await fetch(`https://api.mercadopago.com/v1/payments/${newPaymentId}`, {
