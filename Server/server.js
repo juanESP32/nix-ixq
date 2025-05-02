@@ -4,16 +4,12 @@ import path from "path";
 import { MercadoPagoConfig, Preference } from "mercadopago";
 import dotenv from "dotenv";
 import { fileURLToPath } from "url";
-import mqtt from "mqtt"; // ✅ Importamos el cliente MQTT
+import mqtt from "mqtt";
 
-// Define __dirname manualmente
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Obtén la ruta absoluta del archivo .env
 const envPath = path.resolve(__dirname, "../.env");
-
-// Carga las variables de entorno desde el archivo .env
 dotenv.config({ path: envPath });
 
 console.log("Ruta del archivo .env:", envPath);
@@ -21,36 +17,44 @@ console.log("Access Token cargado desde .env:", process.env.ACCESS_TOKEN);
 
 const app = express();
 
-// Configura el cliente de MercadoPago
-const client = new MercadoPagoConfig({
-  accessToken: process.env.ACCESS_TOKEN, // Reemplaza con tu Access Token
-  options: { timeout: 5000 }, // Opcional: Configuración de tiempo de espera
-});
+// Mapa para asociar ID de preferencia con los datos del producto
+const preferenceTracking = new Map();
 
-// Inicializa la API de preferencias
+// Configurar MercadoPago
+const client = new MercadoPagoConfig({
+  accessToken: process.env.ACCESS_TOKEN,
+  options: { timeout: 5000 },
+});
 const preference = new Preference(client);
 
-// Configura express
-app.use(express.urlencoded({ extended: false }));
-app.use(express.json()); // Habilita JSON parsing
-app.use(cors());
+// Configurar MQTT
+const mqttClient = mqtt.connect("mqtts://736ca49d528b4c41bfd924bc491b6878.s1.eu.hivemq.cloud:8883", {
+  username: "snacko",
+  password: "Qwertyuiop1",
+});
+mqttClient.on("connect", () => {
+  console.log("✅ Conectado al broker MQTT");
+});
+mqttClient.on("error", err => {
+  console.error("❌ Error MQTT:", err);
+});
 
-// Servir archivos estáticos desde la carpeta Client
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
+app.use(cors());
 app.use(express.static(path.join(__dirname, "..", "Client")));
 
-// Usa la ruta absoluta para servir los archivos estáticos
 app.get("/", function (req, res) {
-  console.log("Ruta absoluta del archivo index.html:", path.join(__dirname, "..", "Client", "index.html"));
   res.sendFile(path.join(__dirname, "..", "Client", "index.html"));
 });
 
-// Ruta para crear una preferencia
+// Ruta para crear preferencia
 app.post("/create_preference", async (req, res) => {
   try {
     const { description, price, quantity, orderId } = req.body;
 
-    if (!description || !price || !quantity || !orderId) {
-      return res.status(400).json({ error: "Faltan datos requeridos (description, price, quantity, orderId)" });
+    if (!description || !price || !quantity) {
+      return res.status(400).json({ error: "Faltan datos requeridos (description, price, quantity)" });
     }
 
     const preferenceData = {
@@ -66,7 +70,7 @@ app.post("/create_preference", async (req, res) => {
         failure: "https://electronica2-maquina-expendedora.onrender.com",
         pending: "https://electronica2-maquina-expendedora.onrender.com",
       },
-      notification_url: "https://electronica2-maquina-expendedora.onrender.com/update-payment", // Importante para notificaciones atravez de tune ngrok
+      notification_url: "https://electronica2-maquina-expendedora.onrender.com/update-payment",
       auto_return: "approved",
       external_reference: orderId || "ID_GENERICO",
     };
@@ -77,24 +81,23 @@ app.post("/create_preference", async (req, res) => {
     console.log("Respuesta completa de MercadoPago:", response);
 
     if (!response.id) {
-      console.error("Error: La respuesta de MercadoPago no contiene un id válido:", response);
       return res.status(500).json({ error: "La respuesta de MercadoPago no contiene un id válido" });
     }
 
-    // Guardar información del producto en el seguimiento de órdenes
-    orderTracking.set(orderId, {
-      producto: orderId,
-      precio: Number(price),
+    // Guardar en el mapa: ID de preferencia → datos del producto
+    preferenceTracking.set(response.id, {
+      producto: preferenceData.items[0].title,
+      precio: preferenceData.items[0].unit_price,
     });
 
     res.json({ id: response.id });
+
   } catch (error) {
     console.error("Error al crear la preferencia:", error);
     res.status(500).json({ error: error.message });
   }
 });
 
-// Ruta para manejar el feedback (respuesta del pago)
 app.get("/feedback", (req, res) => {
   res.json({
     Payment: req.query.payment_id,
@@ -103,27 +106,19 @@ app.get("/feedback", (req, res) => {
   });
 });
 
-// Variable global para almacenar el último ID de pago
 let lastPaymentId = "";
 
-// Mapa para el seguimiento de órdenes
-const orderTracking = new Map();
-
-// Endpoint para recibir datos de MercadoPago y actualizar el ID
 app.post("/update-payment", (req, res) => {
   const newPaymentId = req.body.id;
 
   if (newPaymentId && newPaymentId !== lastPaymentId) {
     lastPaymentId = newPaymentId;
     console.log("✅ Nuevo ID de pago recibido:", lastPaymentId);
-    console.log("Nuevo ID de pago recibido:", lastPaymentId);
 
-    // 🛰️ Publicamos el evento de venta por MQTT
-    const referencia = req.body.external_reference;
-    const data = orderTracking.get(referencia);
+    const data = preferenceTracking.get(newPaymentId);
 
     if (!data) {
-      console.error("❌ No se encontró información del producto para:", referencia);
+      console.error("❌ No se encontró información del producto para:", newPaymentId);
       return res.status(500).json({ error: "No se encontró información del producto" });
     }
 
@@ -141,34 +136,17 @@ app.post("/update-payment", (req, res) => {
       }
     });
 
-    res.status(200).json({ message: "ID de pago actualizado exitosamente" });
+    res.status(200).json({ message: "ID de pago actualizado y mensaje MQTT enviado" });
   } else {
-    res.status(400).json({ message: "No se proporcionó un ID válido o ya es el mismo" });
+    res.status(400).json({ message: "ID inválido o ya procesado" });
   }
 });
 
-// Endpoint para consultar el estado del último pago
 app.get("/payment-status", (req, res) => {
   res.json({
     id: lastPaymentId,
     paymentConfirmed: !!lastPaymentId,
   });
-});
-
-//datos para ingresar al broker mqtt
-const mqttClient = mqtt.connect("mqtts://736ca49d528b4c41bfd924bc491b6878.s1.eu.hivemq.cloud:8883", {
-  username: "snacko",
-  password: "Qwertyuiop1",
-});
-
-mqttClient.on("connect", () => {
-  console.log("✅ Conectado al broker MQTT");
-});
-
-mqttClient.on("error", err => console.error("❌ Error MQTT:", err));
-
-mqttClient.on("error", (err) => {
-  console.error("❌ Error en la conexión MQTT:", err);
 });
 
 app.listen(8080, "0.0.0.0", () => {
