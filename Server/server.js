@@ -49,8 +49,8 @@ app.post("/create_preference", async (req, res) => {
   try {
     const { description, price, quantity, orderId } = req.body;
 
-    if (!description || !price || !quantity) {
-      return res.status(400).json({ error: "Faltan datos requeridos (description, price, quantity)" });
+    if (!description || !price || !quantity || !orderId) {
+      return res.status(400).json({ error: "Faltan datos requeridos (description, price, quantity, orderId)" });
     }
 
     const preferenceData = {
@@ -81,6 +81,12 @@ app.post("/create_preference", async (req, res) => {
       return res.status(500).json({ error: "La respuesta de MercadoPago no contiene un id válido" });
     }
 
+    // Guardar información del producto en el seguimiento de órdenes
+    orderTracking.set(orderId, {
+      producto: orderId,
+      precio: Number(price),
+    });
+
     res.json({ id: response.id });
   } catch (error) {
     console.error("Error al crear la preferencia:", error);
@@ -100,6 +106,9 @@ app.get("/feedback", (req, res) => {
 // Variable global para almacenar el último ID de pago
 let lastPaymentId = "";
 
+// Mapa para el seguimiento de órdenes
+const orderTracking = new Map();
+
 // Endpoint para recibir datos de MercadoPago y actualizar el ID
 app.post("/update-payment", (req, res) => {
   const newPaymentId = req.body.id;
@@ -110,10 +119,18 @@ app.post("/update-payment", (req, res) => {
     console.log("Nuevo ID de pago recibido:", lastPaymentId);
 
     // 🛰️ Publicamos el evento de venta por MQTT
+    const referencia = req.body.external_reference;
+    const data = orderTracking.get(referencia);
+
+    if (!data) {
+      console.error("❌ No se encontró información del producto para:", referencia);
+      return res.status(500).json({ error: "No se encontró información del producto" });
+    }
+
     const payload = {
-      producto: "A", // 🔁 Deberías hacerlo dinámico si podés
-      precio: 1500,   // 🔁 También debería venir del pedido real
-      paymentId: newPaymentId
+      producto: data.producto,
+      precio: data.precio,
+      paymentId: newPaymentId,
     };
 
     mqttClient.publish("expendedora/snacko/venta", JSON.stringify(payload), { qos: 1 }, err => {
