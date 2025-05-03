@@ -90,6 +90,9 @@ app.get("/feedback", (req, res) => {
 let lastPaymentId = "";
 
 app.post("/update-payment", (req, res) => {
+
+  console.log("🔔 Webhook recibido:", req.body);
+
   const newPaymentId = req.body.id;
   const externalRef = req.body.external_reference;
 
@@ -123,23 +126,28 @@ app.get("/payment-status", (req, res) => {
     paymentConfirmed: !!lastPaymentId,
   });
 });
-/////////////////
-app.get("/test-mqtt", (req, res) => {
-  const testPayload = {
-    precio: 99 // Elegí cualquier valor para probar
-  };
 
-  mqttClient.publish("expendedora/snacko/venta", JSON.stringify(testPayload), { qos: 1 }, err => {
-    if (err) {
-      console.error("❌ Error al publicar test MQTT:", err);
-      res.status(500).send("Error publicando MQTT");
-    } else {
-      console.log("📤 Mensaje MQTT de prueba publicado:", testPayload);
-      res.send("Mensaje MQTT de prueba enviado correctamente");
-    }
-  });
-});
-////////////
+///////////////// LINEAS PARA PRUEBA MANUAL DE MQTT /////////////////
+// Puedes usar esta ruta para probar la publicación de mensajes MQTT manualmente
+//https://electronica2-maquina-expendedora.onrender.com/test-mqtt
+
+//  app.get("/test-mqtt", (req, res) => {
+// const testPayload = {
+// precio: 99 // Elegí cualquier valor para probar
+// };
+
+ // mqttClient.publish("expendedora/snacko/venta", JSON.stringify(testPayload), { qos: 1 }, err => {
+ //   if (err) {
+ //     console.error("❌ Error al publicar test MQTT:", err);
+ //     res.status(500).send("Error publicando MQTT");
+ //   } else {
+ //     console.log("📤 Mensaje MQTT de prueba publicado:", testPayload);
+ //     res.send("Mensaje MQTT de prueba enviado correctamente");
+ //   }
+ // });
+//});
+/////////////////////////////////////////////////////////////////////
+
 app.listen(8080, "0.0.0.0", () => {
   console.log("Servidor corriendo en http://0.0.0.0:8080");
 });
