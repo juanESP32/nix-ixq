@@ -89,35 +89,71 @@ app.get("/feedback", (req, res) => {
 
 let lastPaymentId = "";
 
-app.post("/update-payment", (req, res) => {
+// ✅ NUEVO ENDPOINT MODIFICADO
+app.post("/update-payment", async (req, res) => {
+  try {
+    console.log("🔔 Webhook recibido:", req.body);
 
-  console.log("🔔 Webhook recibido:", req.body);
-
-  const newPaymentId = req.body.id;
-  const externalRef = req.body.external_reference;
-
-  if (!newPaymentId || !externalRef || newPaymentId === lastPaymentId) {
-    return res.status(400).json({ message: "ID inválido o faltan datos" });
-  }
-
-  lastPaymentId = newPaymentId;
-
-  const [, precioStr] = externalRef.split("|");
-  const precio = parseInt(precioStr) || 0;
-
-  const payload = {
-    precio
-  };
-
-  mqttClient.publish("expendedora/snacko/venta", JSON.stringify(payload), { qos: 1 }, err => {
-    if (err) {
-      console.error("❌ Error al publicar en MQTT:", err);
-    } else {
-      console.log("📤 Mensaje MQTT publicado:", payload);
+    const paymentId = req.body?.data?.id || req.body?.resource;
+    if (!paymentId) {
+      console.warn("❌ No se recibió un ID de pago válido en el webhook.");
+      return res.status(400).json({ message: "Webhook sin ID válido" });
     }
-  });
 
-  res.status(200).json({ message: "Mensaje MQTT enviado correctamente" });
+    const mpResponse = await fetch(`https://api.mercadopago.com/v1/payments/${paymentId}`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${process.env.ACCESS_TOKEN}`,
+      },
+    });
+
+    if (!mpResponse.ok) {
+      const errorText = await mpResponse.text();
+      console.error("❌ Error al consultar el pago:", errorText);
+      return res.status(500).json({ error: "No se pudo consultar el pago a MP" });
+    }
+
+    const paymentData = await mpResponse.json();
+
+    const externalRef = paymentData.external_reference;
+    const newPaymentId = paymentData.id;
+
+    if (!externalRef || newPaymentId === lastPaymentId) {
+      console.warn("🔁 Webhook duplicado o sin external_reference");
+      return res.status(400).json({ message: "ID inválido o repetido" });
+    }
+
+    lastPaymentId = newPaymentId;
+
+    const [orderId, precioStr] = externalRef.split("|");
+    const precio = parseInt(precioStr) || 0;
+    const cantidad = paymentData.transaction_details?.total_paid_amount ? 1 : "¿?";
+    const producto = orderId;
+
+    const payload = {
+      producto,
+      precio,
+      cantidad
+    };
+
+    console.log(`🛒 Producto comprado: ${producto}`);
+    console.log(`💵 Precio: $${precio}`);
+    console.log(`📦 Cantidad: ${cantidad}`);
+    console.log("📤 Publicando mensaje MQTT:", payload);
+
+    mqttClient.publish("expendedora/snacko/venta", JSON.stringify(payload), { qos: 1 }, err => {
+      if (err) {
+        console.error("❌ Error al publicar en MQTT:", err);
+      } else {
+        console.log("✅ Mensaje MQTT publicado:", payload);
+      }
+    });
+
+    res.status(200).json({ message: "Webhook procesado correctamente" });
+  } catch (error) {
+    console.error("❌ Error en /update-payment:", error);
+    res.status(500).json({ error: "Error procesando el webhook" });
+  }
 });
 
 app.get("/payment-status", (req, res) => {
@@ -134,7 +170,7 @@ app.get("/payment-status", (req, res) => {
 //  app.get("/test-mqtt", (req, res) => {
 // const testPayload = {
 // precio: 99 // Elegí cualquier valor para probar
-// };
+ // };
 
  // mqttClient.publish("expendedora/snacko/venta", JSON.stringify(testPayload), { qos: 1 }, err => {
  //   if (err) {
