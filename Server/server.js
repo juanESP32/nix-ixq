@@ -65,12 +65,6 @@ app.post("/create_preference", async (req, res) => {
       external_reference: orderId,
     };
 
-    // Guarda los datos del producto en el Map
-    productDataMap.set(orderId, {
-      description,
-      price: Number(price),
-    });
-
     const response = await preference.create({ body: preferenceData });
     if (!response.id) {
       return res.status(500).json({ error: "La respuesta de MercadoPago no contiene un id válido" });
@@ -92,7 +86,6 @@ app.get("/feedback", (req, res) => {
 });
 
 let lastPaymentId = "";
-const productDataMap = new Map();
 
 app.post("/update-payment", async (req, res) => {
   const newPaymentId = req.body.id;
@@ -103,7 +96,6 @@ app.post("/update-payment", async (req, res) => {
 
   lastPaymentId = newPaymentId;
   console.log("✅ Nuevo ID de pago recibido:", newPaymentId);
-  console.log("Contenido de req.body recibido en /update-payment:", req.body);
 
   try {
     const mpResponse = await fetch(`https://api.mercadopago.com/v1/payments/${newPaymentId}`, {
@@ -118,18 +110,12 @@ app.post("/update-payment", async (req, res) => {
     console.log("Respuesta de MercadoPago:", paymentData);
 
     const externalRef = paymentData.external_reference;
-
-    // Recupera los datos del producto desde el Map
-    const productData = productDataMap.get(externalRef);
-
-    if (!productData) {
-      console.error("❌ No se encontraron datos del producto para:", externalRef);
-      return res.status(404).json({ error: "No se encontraron datos del producto" });
-    }
+    const producto = paymentData.description || externalRef || "desconocido";
+    const precio = paymentData.transaction_details?.total_paid_amount || paymentData.transaction_amount || 0;
 
     const payload = {
-      producto: productData.description,
-      precio: productData.price,
+      producto,
+      precio,
       paymentId: newPaymentId,
       referencia: externalRef,
     };
