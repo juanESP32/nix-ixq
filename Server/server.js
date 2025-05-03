@@ -5,7 +5,7 @@ import { MercadoPagoConfig, Preference } from "mercadopago";
 import dotenv from "dotenv";
 import { fileURLToPath } from "url";
 import mqtt from "mqtt";
-import fetch from "node-fetch"; // 👈 Requiere instalar: npm install node-fetch
+import fetch from "node-fetch";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -89,11 +89,16 @@ app.get("/feedback", (req, res) => {
 
 let lastPaymentId = "";
 
-// ✅ NUEVO ENDPOINT MODIFICADO
 app.post("/update-payment", async (req, res) => {
-  try {
-    console.log("🔔 Webhook recibido:", req.body);
+  console.log("🔔 Webhook recibido:", req.body);
 
+  // ✅ IGNORAR temas que no sean 'payment'
+  if (req.body.topic && req.body.topic !== "payment") {
+    console.log("ℹ️ Notificación ignorada (tipo no relevante):", req.body.topic);
+    return res.status(200).json({ message: "Tipo de notificación no procesado" });
+  }
+
+  try {
     const paymentId = req.body?.data?.id || req.body?.resource;
     if (!paymentId) {
       console.warn("❌ No se recibió un ID de pago válido en el webhook.");
@@ -162,27 +167,6 @@ app.get("/payment-status", (req, res) => {
     paymentConfirmed: !!lastPaymentId,
   });
 });
-
-///////////////// LINEAS PARA PRUEBA MANUAL DE MQTT /////////////////
-// Puedes usar esta ruta para probar la publicación de mensajes MQTT manualmente
-//https://electronica2-maquina-expendedora.onrender.com/test-mqtt
-
-//  app.get("/test-mqtt", (req, res) => {
-// const testPayload = {
-// precio: 99 // Elegí cualquier valor para probar
- // };
-
- // mqttClient.publish("expendedora/snacko/venta", JSON.stringify(testPayload), { qos: 1 }, err => {
- //   if (err) {
- //     console.error("❌ Error al publicar test MQTT:", err);
- //     res.status(500).send("Error publicando MQTT");
- //   } else {
- //     console.log("📤 Mensaje MQTT de prueba publicado:", testPayload);
- //     res.send("Mensaje MQTT de prueba enviado correctamente");
- //   }
- // });
-//});
-/////////////////////////////////////////////////////////////////////
 
 app.listen(8080, "0.0.0.0", () => {
   console.log("Servidor corriendo en http://0.0.0.0:8080");
