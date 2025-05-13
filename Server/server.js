@@ -19,7 +19,6 @@ const app = express();
 const mqttClient = mqtt.connect("mqtts://736ca49d528b4c41bfd924bc491b6878.s1.eu.hivemq.cloud:8883", {
   username: "snacko",
   password: "Qwertyuiop1",
-  reconnectPeriod: 1000, // Reintenta la conexión cada 1 segundo si se desconecta
 });
 
 mqttClient.on("connect", () => console.log("✅ Conectado al broker MQTT"));
