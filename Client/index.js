@@ -4,59 +4,51 @@ window.addEventListener("load", function () {
             locale: 'es-AR'
         });
 
-        document.querySelectorAll(".checkout-btn").forEach(button => {
-            button.addEventListener("click", function () {
-                // Deshabilita el botón actual
-                button.disabled = true;
+        const checkoutButton = document.getElementById("checkout-btn");
+        checkoutButton.addEventListener("click", function () {
+            const priceInput = document.getElementById("price-input");
+            const price = parseFloat(priceInput.value);
 
-                // Habilita todos los demás botones
-                document.querySelectorAll(".checkout-btn").forEach(otherButton => {
-                    if (otherButton !== button) {
-                        otherButton.disabled = false;
-                    }
-                });
+            if (isNaN(price) || price <= 0) {
+                alert("Por favor, ingrese un monto válido.");
+                return;
+            }
 
-                const suffix = button.dataset.product;
+            // Datos fijos
+            const description = "Crédito en la máquina expendedora";
+            const quantity = 1;
 
-                const description = document.getElementById(`product-description-${suffix}`).textContent;
-                const price = parseFloat(document.getElementById(`unit-price-${suffix}`).textContent);
-                const quantity = parseInt(document.getElementById(`quantity-${suffix}`).textContent);
+            const orderData = {
+                description,
+                price,
+                quantity,
+                orderId: "CREDITO" // Identificador fijo para este tipo de transacción
+            };
 
-                const orderData = {
-                    description,
-                    price,
-                    quantity,
-                    orderId: suffix.toUpperCase() // ← NUEVO: A, B o C
-                };
+            console.log("Datos enviados al servidor:", orderData);
 
-                console.log("Datos enviados al servidor:", orderData);
-
-                fetch("https://electronica2-maquina-expendedora.onrender.com/create_preference", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify(orderData),
-                })
-                .then(response => response.json())
-                .then(preference => {
-                    if (!preference.id) {
-                        alert("No se pudo generar la preferencia de pago.");
-                        button.disabled = false; // Habilita el botón si ocurre un error
-                        return;
-                    }
-                    const targetId = `button-checkout-${suffix}`;
-                    createCheckoutButton(preference.id, targetId);
-                })
-                .catch(error => {
-                    console.error("Error al comunicarse con el servidor:", error);
-                    alert("Error al generar el pago.");
-                    button.disabled = false; // Habilita el botón si ocurre un error
-                });
+            fetch("https://electronica2-maquina-expendedora.onrender.com/create_preference", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(orderData),
+            })
+            .then(response => response.json())
+            .then(preference => {
+                if (!preference.id) {
+                    alert("No se pudo generar la preferencia de pago.");
+                    return;
+                }
+                createCheckoutButton(preference.id);
+            })
+            .catch(error => {
+                console.error("Error al comunicarse con el servidor:", error);
+                alert("Error al generar el pago.");
             });
         });
 
-        function createCheckoutButton(preferenceId, elementId) {
+        function createCheckoutButton(preferenceId) {
             const bricksBuilder = mp.bricks();
 
             const renderComponent = async () => {
@@ -66,7 +58,7 @@ window.addEventListener("load", function () {
                         window.checkoutButton = null;
                     }
 
-                    window.checkoutButton = await bricksBuilder.create("wallet", elementId, {
+                    window.checkoutButton = await bricksBuilder.create("wallet", "button-checkout", {
                         initialization: { preferenceId },
                         callbacks: {
                             onError: (error) => console.error("Error en el pago:", error),

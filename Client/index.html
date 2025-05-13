@@ -9,36 +9,14 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>BIENVENIDOS! Selecione su producto</h1>
+    <h1>BIENVENIDOS! Seleccione su producto</h1>
 
-    <div class="product-container">
-    <div class="product-card">
-        <p id="product-description-a">Producto A</p>
-        <img src="imagenes/producto-A.jpg" alt="Producto A">
-        <p>Precio: $<span id="unit-price-a">20</span></p>
-        <p>Cantidad: <span id="quantity-a">1</span></p>
-        <button class="checkout-btn" data-product="a">Comprar</button>
-        <div id="button-checkout-a" class="button-checkout"></div>
+    <h2>Ingrese crédito en la máquina expendedora</h2>
+    <div>
+        <label for="price-input">Monto:</label>
+        <input type="number" id="price-input" min="1" step="0.01" placeholder="ARS">
     </div>
-
-    <div class="product-card">
-        <p id="product-description-b">Producto B</p>
-        <img src="imagenes/producto-B.jpg" alt="Producto B">
-        <p>Precio: $<span id="unit-price-b">35</span></p>
-        <p>Cantidad: <span id="quantity-b">1</span></p>
-        <button class="checkout-btn" data-product="b">Comprar</button>
-        <div id="button-checkout-b" class="button-checkout"></div>
-    </div>
-
-    <div class="product-card">
-        <p id="product-description-c">Producto C</p>
-        <img src="imagenes/producto-C.jpg" alt="Producto C">
-        <p>Precio: $<span id="unit-price-c">50</span></p>
-        <p>Cantidad: <span id="quantity-c">1</span></p>
-        <button class="checkout-btn" data-product="c">Comprar</button>
-        <div id="button-checkout-c" class="button-checkout"></div>
-    </div>
-
+    <button id="checkout-btn">Cargar</button>
     <div id="button-checkout"></div>
 </body>
 </html>

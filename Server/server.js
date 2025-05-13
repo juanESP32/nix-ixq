@@ -103,7 +103,10 @@ app.post("/update-payment", (req, res) => {
   const precio = parseInt(precioStr) || 0;
 
   const payload = {
-    precio
+    producto: "Crédito en la máquina expendedora",
+    precio,
+    paymentId: newPaymentId,
+    referencia: externalRef,
   };
 
   mqttClient.publish("expendedora/snacko/venta", JSON.stringify(payload), { qos: 1 }, err => {
