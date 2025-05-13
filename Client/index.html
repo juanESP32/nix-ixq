@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SNACKO - Maquina Expendedora</title>
+    <script src="https://sdk.mercadopago.com/js/v2"></script>
+    <script src="index.js" defer></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>BIENVENIDOS! Seleccione su producto</h1>
+
+    <h2>Ingrese crédito en la máquina expendedora</h2>
+    <div>
+        <label for="price-input">Monto:</label>
+        <input type="number" id="price-input" min="1" step="0.01" placeholder="ARS">
+    </div>
+    <button id="checkout-btn">Cargar</button>
+    <div id="button-checkout"></div>
+</body>
+</html>

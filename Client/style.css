@@ -1,0 +1,98 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f1f1f1;
+    text-align: center;
+}
+
+.product-container {
+    display: flex; /* Activa Flexbox */
+    flex-wrap: nowrap; /* Evita que los productos se envuelvan en otra fila */
+    justify-content: center; /* Centra los productos horizontalmente */
+    gap: 20px; /* Espacio entre los productos */
+    padding: 20px;
+    overflow-x: auto; /* Permite desplazamiento horizontal si no caben */
+}
+
+.product-card {
+    background-color: #1e1e1e;
+    color: #f1c40f;
+    width: 250px;
+    height: 400px; /* Altura fija para todas las tarjetas */
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    padding: 15px;
+    text-align: center;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Distribuye los elementos uniformemente */
+    align-items: center; /* Centra los elementos horizontalmente */
+}
+
+.product-card h2 {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    min-height: 40px; /* Asegura que los títulos ocupen el mismo espacio */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.product-card img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+.price {
+    font-size: 1.1rem;
+    margin: 5px 0;
+    color: #ffffff;
+}
+
+.checkout-btn {
+    background-color: #f1c40f;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-weight: bold;
+    color: #1e1e1e;
+    cursor: pointer;
+    margin-top: 10px;
+    width: 80%; /* Asegura que todos los botones tengan el mismo ancho */
+    text-align: center;
+}
+
+.checkout-btn:hover {
+    background-color: #ddb90c;
+}
+
+[id^="button-checkout"] {
+    margin-top: 10px;
+}
+
+@media (max-width: 768px) {
+    .product-container {
+        flex-direction: column; /* Asegura que las tarjetas estén en una columna */
+        align-items: center;
+        padding: 10px;
+        flex-wrap: wrap; /* Permite que los productos se envuelvan en filas */
+        justify-content: center; /* Centra los productos en filas */
+        gap: 30px; /* Aumenta el espacio entre las tarjetas */
+    }
+
+    .product-card {
+        width: 90%;
+        max-width: 350px;
+        margin-bottom: 20px; /* Aumenta el espacio entre las tarjetas */
+    }
+
+    .checkout-btn {
+        font-size: 1rem;
+    }
+}
