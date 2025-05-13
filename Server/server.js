@@ -89,6 +89,7 @@ app.get("/feedback", (req, res) => {
 });
 
 let lastPaymentId = "";
+const processedPayments = new Set();
 
 app.post("/update-payment", async (req, res) => {
   console.log("🔔 Webhook recibido:", req.body);
@@ -104,6 +105,12 @@ app.post("/update-payment", async (req, res) => {
     if (!paymentId) {
       console.warn("❌ No se recibió un ID de pago válido en el webhook.");
       return res.status(400).json({ message: "Webhook sin ID válido" });
+    }
+
+    // Verifica si el pago ya fue procesado
+    if (processedPayments.has(paymentId)) {
+      console.log("🔁 Pago ya procesado, ignorando:", paymentId);
+      return res.status(200).json({ message: "Pago ya procesado" });
     }
 
     const mpResponse = await fetch(`https://api.mercadopago.com/v1/payments/${paymentId}`, {
@@ -154,6 +161,9 @@ app.post("/update-payment", async (req, res) => {
         console.log("✅ Mensaje MQTT publicado:", payload);
       }
     });
+
+    // Marca el pago como procesado
+    processedPayments.add(paymentId);
 
     res.status(200).json({ message: "Webhook procesado correctamente" });
   } catch (error) {
