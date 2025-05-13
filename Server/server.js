@@ -89,7 +89,7 @@ app.get("/feedback", (req, res) => {
 });
 
 let lastPaymentId = "";
-const processedPayments = new Set();
+const processedPayments = new Map();
 
 app.post("/update-payment", async (req, res) => {
   console.log("🔔 Webhook recibido:", req.body);
@@ -162,8 +162,8 @@ app.post("/update-payment", async (req, res) => {
       }
     });
 
-    // Marca el pago como procesado
-    processedPayments.add(paymentId);
+    // Marca el pago como procesado con un tiempo de expiración
+    processedPayments.set(paymentId, Date.now());
 
     res.status(200).json({ message: "Webhook procesado correctamente" });
   } catch (error) {
@@ -171,6 +171,19 @@ app.post("/update-payment", async (req, res) => {
     res.status(500).json({ error: "Error procesando el webhook" });
   }
 });
+
+// Limpieza periódica de pagos procesados
+setInterval(() => {
+  const expirationTime = 60 * 60 * 1000; // 1 hora en milisegundos
+  const now = Date.now();
+
+  for (const [paymentId, timestamp] of processedPayments.entries()) {
+    if (now - timestamp > expirationTime) {
+      processedPayments.delete(paymentId);
+      console.log(`🧹 Eliminado paymentId procesado: ${paymentId}`);
+    }
+  }
+}, 10 * 60 * 1000); // Ejecutar cada 10 minutos
 
 app.get("/payment-status", (req, res) => {
   res.json({
